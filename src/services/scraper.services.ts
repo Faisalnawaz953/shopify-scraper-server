@@ -1,6 +1,5 @@
 import { createObjectCsvWriter } from 'csv-writer'
 import fetch from 'node-fetch'
-import messages from '../utilities/messages'
 import csvToJson from 'csvtojson'
 class ScraperServices {
   //import axios from "axios"
@@ -20,13 +19,12 @@ class ScraperServices {
           records = [...records, ...response.products]
           pageNumber++
         } else {
-          console.log('terminated')
           break
         }
       }
       return records
     } catch (error) {
-      console.log(error)
+      throw new Error(error)
     }
   }
   getProductsByDateArray(products: any[]) {
@@ -61,26 +59,19 @@ class ScraperServices {
         { id: 'count', title: 'COUNT' },
       ],
     })
-    await csvWriterForDate
-      .writeRecords(product_by_date)
-      .then(() => {
-        console.log(messages.PRODUCT_BY_DATE_CSV_CREATED)
-      })
-      .catch((err) => {
-        console.log(messages.PRODUCT_BY_DATE_CSV_NOT_CREATED)
-        throw new Error(err)
-      })
+    await csvWriterForDate.writeRecords(product_by_date).catch((err) => {
+      throw new Error(err)
+    })
   }
   sortByDate(products: any[]) {
-    const result = products.sort(function (a, b) {
-      var keyA = new Date(a.created_at),
+    return products.sort(function (a, b) {
+      const keyA = new Date(a.created_at),
         keyB = new Date(b.created_at)
       // Compare the 2 dates
       if (keyA < keyB) return -1
       if (keyA > keyB) return 1
       return 0
     })
-    return result
   }
 
   getProductsByTypeArray(products: any[]) {
@@ -118,19 +109,13 @@ class ScraperServices {
         { id: 'count', title: 'COUNT' },
       ],
     })
-    await csvWriterForType
-      .writeRecords(product_by_type)
-      .then(() => {
-        console.log(messages.PRODUCT_BY_TYPE_CSV_CREATED)
-      })
-      .catch((err) => {
-        console.log(messages.PRODUCT_BY_TYPE_CSV_NOT_CREATED)
-        throw new Error(err)
-      })
+    await csvWriterForType.writeRecords(product_by_type).catch((err) => {
+      throw new Error(err)
+    })
   }
   sortByType(products: any[]) {
     return products.sort(function (a, b) {
-      var keyA = a.product_type,
+      const keyA = a.product_type,
         keyB = b.product_type
       // Compare the 2 types
       if (keyA < keyB) return -1

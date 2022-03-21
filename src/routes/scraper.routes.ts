@@ -3,8 +3,8 @@ import { Router } from 'express'
 
 const router = Router()
 
-router.get('/getAllProducts', scraperController.getAllProducts)
-router.get('/getAllStores', scraperController.getAllStores)
-router.post('/getJsonFiles', scraperController.getJsonFiles)
+router.get('/get-all-products', scraperController.getAllProducts)
+router.get('/get-all-stores', scraperController.getAllStores)
+router.post('/get-store-data', scraperController.getStoreData)
 
 export default router

@@ -6,14 +6,14 @@ import responseService from '../services/responseService'
 import fs from 'fs'
 class ScrapperController {
   async getAllProducts(req: Request, res: Response) {
-    let path = `ShopifyStoreList`
-    let data = fs.readFileSync(path, { encoding: `utf8` })
-    let lines = data.split(`\n`)
-    console.log('LINES', lines)
+    const path = `ShopifyStoreList`
+    const data = fs.readFileSync(path, { encoding: `utf8` })
+    const lines = data.split(`\n`)
+
     for (let i = 0; i < lines.length; i++) {
       //inner loop
-      let shopifyURL = JSON.stringify(lines[i])
-      let newURL = shopifyURL.split('\\')
+      const shopifyURL = JSON.stringify(lines[i])
+      const newURL = shopifyURL.split('\\')
       let url = newURL[0].replace('"', '')
       if (i === lines.length - 1) {
         url = url.replace('"', '')
@@ -39,16 +39,15 @@ class ScrapperController {
   }
 
   getAllStores(req: Request, res: Response) {
-    let path = `ShopifyStoreList`
-    let data = fs.readFileSync(path, { encoding: `utf8` })
-    let lines = data.split(`\n`)
-    console.log('LINES', lines)
-    let stores = []
+    const path = `ShopifyStoreList`
+    const data = fs.readFileSync(path, { encoding: `utf8` })
+    const lines = data.split(`\n`)
+    const stores = []
     for (let i = 0; i < lines.length; i++) {
       //inner loop
-      let shopifyURL = JSON.stringify(lines[i])
-      let newURL = shopifyURL.split('\\')
-      let url = newURL[0].replace('"', '')
+      const shopifyURL = JSON.stringify(lines[i])
+      const newURL = shopifyURL.split('\\')
+      const url = newURL[0].replace('"', '')
       stores.push(url)
     }
     stores[lines.length - 1] = stores[lines.length - 1].replace('"', '')
@@ -56,8 +55,8 @@ class ScrapperController {
       .status(constants.CODE.OK)
       .send(responseService(constants.STATUS.SUCCESS, stores, messages.Returned_ALL_Stores))
   }
-  async getJsonFiles(req: Request, res: Response) {
-    let storeName = req.body.store as string
+  async getStoreData(req: Request, res: Response) {
+    const storeName = req.body.store as string
     const jsonByDate = await scraperServices.csvFileToJson(`${storeName}_product_by_date.csv`)
     const jsonByType = await scraperServices.csvFileToJson(`${storeName}_product_by_type.csv`)
     if (jsonByDate && jsonByType) {
